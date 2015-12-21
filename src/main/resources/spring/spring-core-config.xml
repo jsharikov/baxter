@@ -1,0 +1,48 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
+	   xmlns:p="http://www.springframework.org/schema/p"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+ 
+	<context:component-scan base-package="by.psu.baxter.entity, by.psu.baxter.dao, by.psu.baxter.service, by.psu.baxter.web" />
+
+    <bean id="dataSource" destroy-method="close"
+          class="org.apache.commons.dbcp.BasicDataSource"
+          p:driverClassName="org.postgresql.Driver" p:url="jdbc:postgresql://localhost:5432/baxter"
+          p:username="postgres" p:password="postgres" />
+
+    <bean id="sessionFactory"
+          class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="packagesToScan" value="by.psu.baxter.entity" />
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.format_sql">true</prop>
+            </props>
+        </property>
+    </bean>
+
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+            <tx:attributes>
+                <tx:method name="*" />
+            </tx:attributes>
+        </tx:advice>
+
+        <aop:config>
+            <aop:pointcut expression="execution(* by.psu.baxter.service.*ServiceImpl.*(..))" id="service" />
+            <aop:advisor advice-ref="txAdvice" pointcut-ref="service" />
+        </aop:config>
+
+	<bean id="transactionManager"
+          class="org.springframework.orm.hibernate4.HibernateTransactionManager"
+          p:dataSource-ref ="dataSource"
+          p:sessionFactory-ref="sessionFactory" />
+
+	<aop:aspectj-autoproxy />
+
+</beans>
