@@ -1,4 +1,5 @@
 import by.psu.baxter.entity.User;
+import by.psu.baxter.entity.UserFilter;
 import by.psu.baxter.service.UserService;
 import org.junit.Assert;
 import org.junit.Test;
@@ -7,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -18,6 +21,7 @@ import java.util.Set;
         "classpath:spring/spring-core-config.xml"
 })
 @RunWith(SpringJUnit4ClassRunner.class)
+@Transactional
 public class UserServiceTest {
 
         @Autowired
@@ -40,7 +44,7 @@ public class UserServiceTest {
                 userService.save(petyaUpdate);
 
                 //Проверка
-                Assert.assertEquals(petyaUpdate, userService.get(petya.getId()));
+                Assert.assertTrue(petyaUpdate.equals(userService.get(petya.getId())));
         }
 
         @Test
@@ -55,11 +59,17 @@ public class UserServiceTest {
                 expectedSetOfUsers.add(vasya);
 
                 //Действие
-                List<User> users = userService.getAll();
+                UserFilter filter = new UserFilter();
+                filter.setLimit(20);
+                filter.setOffset(0);
+                filter.setOrderBy("login");
+                filter.setReverse(true);
+                List<User> users = userService.getAll(filter);
 
                 //Проверка
                 Assert.assertTrue(users.containsAll(expectedSetOfUsers));
         }
+
 
         @Test
         public void testDelete() {

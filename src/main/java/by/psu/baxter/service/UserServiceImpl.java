@@ -2,6 +2,7 @@ package by.psu.baxter.service;
 
 import by.psu.baxter.dao.UserDao;
 import by.psu.baxter.entity.User;
+import by.psu.baxter.entity.UserFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,8 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Override
-    public List<User> getAll() {
-        return userDao.findAll();
+    public List<User> getAll(UserFilter filter) {
+        return userDao.find(filter);
     }
 
     @Override

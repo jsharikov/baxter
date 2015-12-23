@@ -1,6 +1,7 @@
 package by.psu.baxter.service;
 
 import by.psu.baxter.entity.User;
+import by.psu.baxter.entity.UserFilter;
 
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
  */
 public interface UserService {
 
-    List<User> getAll();
+    List<User> getAll(UserFilter filter);
 
     void save(User user);
 

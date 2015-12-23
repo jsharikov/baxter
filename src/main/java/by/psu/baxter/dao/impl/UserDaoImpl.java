@@ -2,7 +2,10 @@ package by.psu.baxter.dao.impl;
 
 import by.psu.baxter.dao.UserDao;
 import by.psu.baxter.entity.User;
+import by.psu.baxter.entity.UserFilter;
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -18,8 +21,11 @@ public class UserDaoImpl implements UserDao {
     private SessionFactory sessionFactory;
 
     @Override
-    public List<User> findAll() {
-        return sessionFactory.getCurrentSession().createQuery("from User").list();
+    public List<User> find(UserFilter filter) {
+        return sessionFactory.getCurrentSession().createCriteria(User.class)
+                .setFirstResult(filter.getOffset())
+                .setMaxResults(filter.getLimit())
+                .addOrder(filter.isReverse() ? Order.desc(filter.getOrderBy()) : Order.asc(filter.getOrderBy())).list();
     }
 
     @Override
@@ -39,6 +45,9 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void delete(Long id) {
-        sessionFactory.getCurrentSession().delete(read(id));
+        User user = read(id);
+        if (user != null) {
+            sessionFactory.getCurrentSession().delete(user);
+        }
     }
 }

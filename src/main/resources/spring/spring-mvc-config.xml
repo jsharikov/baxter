@@ -12,26 +12,11 @@
 
 	<context:component-scan base-package="by.psu.baxter.web" />
  
-	<!--<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/WEB-INF/views/jsp/" />
 		<property name="suffix" value=".jsp" />
-	</bean>-->
- 
-	<mvc:resources mapping="/resources/**" location="/resources/" />
+	</bean>
 
 	<mvc:annotation-driven/>
-
-	<context:annotation-config/>
-
-	<bean id="jacksonMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
-
-	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
-		<property name="messageConverters">
-			<list>
-				<ref bean="jacksonMessageConverter"/>
-			</list>
-		</property>
-	</bean>
  
 </beans>

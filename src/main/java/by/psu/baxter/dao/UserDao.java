@@ -1,6 +1,7 @@
 package by.psu.baxter.dao;
 
 import by.psu.baxter.entity.User;
+import by.psu.baxter.entity.UserFilter;
 
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
  */
 public interface UserDao {
 
-    List<User> findAll();
+    List<User> find(UserFilter filter);
 
     void create(User user);
 
